@@ -16,7 +16,7 @@ class Forum(models.Model):
         super(Forum,self).save(*args, **kwargs)
 
     def get_absolute_url(self):
-        return reverse('home')
+        return reverse('forum-list')
 
     def __str__(self):
         return self.title
