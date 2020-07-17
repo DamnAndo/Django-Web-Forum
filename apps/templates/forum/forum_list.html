@@ -1,10 +1,14 @@
 {% extends 'base.html' %}
-{% block title %}Login{% endblock%}
+{% load humanize %}
+{% block title %}Forum List{% endblock%}
 {% block content %}
     <h2>Daftar Forum</h2>
     <ul>
         {% for forum in forums %}
-            <li>{{ forum.title }} - <a href="{% url 'forum-by' forum.user %}">{{forum.user}}</a></li>
+            <li><a href="{% url 'forum-detail' forum.slug %}">{{ forum.title }}</a>  -
+                <a href="{% url 'forum-by' forum.user %}">{{forum.user}}</a> -
+                {{ forum.created_at|naturaltime }}
+            </li>
         {% endfor %}
     </ul>
     <hr>
