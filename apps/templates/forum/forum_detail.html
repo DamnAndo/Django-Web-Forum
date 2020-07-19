@@ -7,6 +7,10 @@
     <time>{{object.created_at|naturaltime}}</time>
     {% if request.user == object.user %}
         <a href="{% url 'forum-edit' object.id %}">Edit</a>
+        <form action="{% url 'forum-delete' object.id %}" method="POST">
+            {% csrf_token %}
+            <input type="submit" value="Delete" />
+        </form>
     {% endif %}
 
     <h4>Forum List</h4>

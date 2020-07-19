@@ -1,7 +1,7 @@
 from django.shortcuts import render,get_object_or_404
 from django.contrib.auth.decorators import login_required
 from  django.utils.decorators import method_decorator
-from django.views.generic import CreateView,ListView,DetailView,UpdateView
+from django.views.generic import CreateView,ListView,DetailView,UpdateView,DeleteView
 from django.contrib.auth.models import User
 from django.http import HttpResponseForbidden
 from .models import Forum
@@ -36,6 +36,11 @@ class ForumUpdateView(OwnerMixin,UpdateView):
     model=Forum
     fields = ['title','desc']
     template_name = "forum/forum_update_form.html"
+
+@method_decorator(login_required,name='dispatch')
+class ForumDeleteView(DeleteView):
+    model = Forum
+    success_url = '/forum'
 
 
 @method_decorator(login_required,name="dispatch")
