@@ -13,11 +13,19 @@
         </form>
     {% endif %}
 
-    <h4>Forum List</h4>
+    <h4>Comment List</h4>
     <ul>
-    {% for forum in forum_list %}
-        <li>{{forum.created_at}}</li>
+    {% for comment in object.comment_set.all %}
+        <li>{{comment.desc}} - by {{comment.user}}</li>
     {% endfor %}
     </ul>
+    <br />
+    <br />
+    <h4>Comment Form</h4>
+    <form method="POST" action="{% url 'comment-add' object.id %}">
+        {% csrf_token %}
+        {{ form_comment }}<br/>
+        <input type="submit" value="Submit"/><br/>
+    </form>
 {% endblock %}
 

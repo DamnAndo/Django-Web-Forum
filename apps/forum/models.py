@@ -12,8 +12,9 @@ class Forum(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     
     def save(self,*args,**kwargs):
-        self.slug = slugify(self.title)+'-'+time.strftime("%Y%m%d-%H%M%S")
-        super(Forum,self).save(*args, **kwargs)
+        if self.pk is None:
+            self.slug = slugify(self.title)+'-'+time.strftime("%Y%m%d-%H%M%S")
+            super(Forum,self).save(*args, **kwargs)
 
     def get_absolute_url(self):
         return reverse('forum-list')
@@ -26,6 +27,9 @@ class Comment(models.Model):
     forum = models.ForeignKey(Forum,on_delete=models.CASCADE)
     desc = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
+
+    def get_absolute_url(self):
+        return reverse('forum-list')
 
 
 

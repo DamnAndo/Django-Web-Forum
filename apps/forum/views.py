@@ -4,7 +4,8 @@ from  django.utils.decorators import method_decorator
 from django.views.generic import CreateView,ListView,DetailView,UpdateView,DeleteView
 from django.contrib.auth.models import User
 from django.http import HttpResponseForbidden
-from .models import Forum
+from .models import Forum,Comment
+from .forms import CommentForm
 
 class OwnerMixin(object):
     def dispatch(self, request,*args, **kwargs):
@@ -28,7 +29,8 @@ class ForumDetailView(DetailView):
     model=Forum
     def get_context_data(self,**kwargs):
         context = super().get_context_data(**kwargs)
-        context['forum_list'] = Forum.objects.all()
+        # context['forum_list'] = Forum.objects.all()
+        context['form_comment'] = CommentForm()
         return context
 
 @method_decorator(login_required,name="dispatch")
@@ -51,3 +53,20 @@ class ForumCreate(CreateView):
     def form_valid(self, form):
         form.instance.user = self.request.user
         return super().form_valid(form)
+
+@method_decorator(login_required,name="dispatch")
+class CommentCreate(CreateView):
+    model = Comment
+    fields = ['desc']
+
+    def form_valid(self, form):
+        _forum = get_object_or_404(Forum, id=self.kwargs['pk'])
+        form.instance.user = self.request.user
+        form.instance.forum = _forum
+        return super().form_valid(form)
+
+    # def form_valid(self, form):
+    #     _forum = get_object_or_404(Forum, id=self.kwargs['pk'])
+    #     form.instance.user = self.request.user
+    #     form.instance.form = _forum
+    #     return super().form_valid(form)
