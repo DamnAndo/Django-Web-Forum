@@ -17,6 +17,14 @@
     <ul>
     {% for comment in object.comment_set.all %}
         <li>{{comment.desc}} - by {{comment.user}}</li>
+         {% if request.user == comment.user %}
+            <a href="{% url 'comment-edit' comment.id %}">Edit Comment</a>
+            &nbsp;&nbsp;
+             <form action="{% url 'comment-delete' comment.id %}" method="POST">
+                {% csrf_token %}
+                <input type="submit" value="Delete Comment" />
+            </form>
+         {% endif %}
     {% endfor %}
     </ul>
     <br />

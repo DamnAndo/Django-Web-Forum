@@ -39,6 +39,11 @@ class ForumUpdateView(OwnerMixin,UpdateView):
     fields = ['title','desc']
     template_name = "forum/forum_update_form.html"
 
+class CommentUpdate(OwnerMixin,UpdateView):
+    model = Comment
+    fields = ['desc']
+    template_name = "forum/comment_update_form.html"
+
 @method_decorator(login_required,name='dispatch')
 class ForumDeleteView(DeleteView):
     model = Forum
@@ -65,8 +70,7 @@ class CommentCreate(CreateView):
         form.instance.forum = _forum
         return super().form_valid(form)
 
-    # def form_valid(self, form):
-    #     _forum = get_object_or_404(Forum, id=self.kwargs['pk'])
-    #     form.instance.user = self.request.user
-    #     form.instance.form = _forum
-    #     return super().form_valid(form)
+@method_decorator(login_required,name='dispatch')
+class CommentDelete(DeleteView):
+    model = Comment
+    success_url = '/forum'
