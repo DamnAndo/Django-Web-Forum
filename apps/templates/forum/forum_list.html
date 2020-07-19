@@ -11,6 +11,8 @@
             </li>
         {% endfor %}
     </ul>
+    <br>
+    {% include 'snippets/pagination.html' %}
     <hr>
 
     {% if user.is_authenticated %}
