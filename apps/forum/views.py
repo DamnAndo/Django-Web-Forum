@@ -4,6 +4,8 @@ from  django.utils.decorators import method_decorator
 from django.views.generic import CreateView,ListView,DetailView,UpdateView,DeleteView
 from django.contrib.auth.models import User
 from django.http import HttpResponseForbidden
+from django.contrib.messages.views import SuccessMessageMixin
+from django.urls import reverse_lazy
 from .models import Forum,Comment
 from .forms import CommentForm
 
@@ -38,7 +40,12 @@ class ForumDetailView(DetailView):
 class ForumUpdateView(OwnerMixin,UpdateView):
     model=Forum
     fields = ['title','desc']
+    success_message = "Success Update Forum"
     template_name = "forum/forum_update_form.html"
+
+    def get_success_url(self, **kwargs):
+        return reverse_lazy('forum-detail', kwargs={'slug': self.object.slug})
+
 
 class CommentUpdate(OwnerMixin,UpdateView):
     model = Comment
@@ -52,9 +59,10 @@ class ForumDeleteView(DeleteView):
 
 
 @method_decorator(login_required,name="dispatch")
-class ForumCreate(CreateView):
+class ForumCreate(SuccessMessageMixin,CreateView):
     model = Forum
     fields = ['title','desc']
+    success_message = "Success Create Forum"
     
     def form_valid(self, form):
         form.instance.user = self.request.user
